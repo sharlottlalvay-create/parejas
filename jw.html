@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Asignador de Actividades</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh;
+            background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('1102023313_univ_lsr_lg.jpg');
+            background-size: cover; background-position: center; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); width: 90%; max-width: 450px; text-align: center; }
+        h1 { color: #005088; margin-bottom: 20px; }
+        .btn-grid { display: grid; gap: 12px; }
+        button { padding: 15px; border: none; border-radius: 12px; font-weight: bold; color: white; cursor: pointer; transition: 0.3s; }
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+        .btn-1 { background: #7e22ce; } .btn-2 { background: #005088; } .btn-3 { background: #ca8a04; } .btn-4 { background: #d946ef; } .btn-5 { background: #333; }
+        #res { margin-top: 25px; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>Asignaciones</h1>
+    <div class="btn-grid">
+        <button class="btn-1" onclick="sortear('lectura')">Lectura de la Biblia</button>
+        <button class="btn-2" onclick="sortear('conversaciones')">Empiece Conversaciones</button>
+        <button class="btn-3" onclick="sortear('revisitas')">Haga Revisitas</button>
+        <button class="btn-4" onclick="sortear('creencias')">Explique sus Creencias</button>
+        <button class="btn-5" onclick="sortear('discurso')">Discurso</button>
+    </div>
+    <div id="res">Presiona un botón para sortear...</div>
+</div>
+
+<script>
+    const pub = [
+        { nombre: "Lida Cabezas", genero: "mujer", categoria: "principiante" }, { nombre: "Clemencia Castillo", genero: "mujer", categoria: "principiante" },
+        { nombre: "Marta León", genero: "mujer", categoria: "intermedio" }, { nombre: "Adriana de Loor", genero: "mujer", categoria: "intermedio" },
+        { nombre: "Zaray Loor", genero: "mujer", categoria: "intermedio" }, { nombre: "Nestor Loor", genero: "hombre", categoria: "mejor" },
+        { nombre: "Teresa de Luna", genero: "mujer", categoria: "principiante" }, { nombre: "Estelita de Mendoza", genero: "mujer", categoria: "principiante" },
+        { nombre: "Judith de Mendoza", genero: "mujer", categoria: "mejor" }, { nombre: "Kamila Mendoza", genero: "mujer", categoria: "mejor" },
+        { nombre: "Aridia Quiñones", genero: "mujer", categoria: "mejor" }, { nombre: "Clelio Quiñones", genero: "hombre", categoria: "principiante" },
+        { nombre: "Flor de Quiñones", genero: "mujer", categoria: "intermedio" }, { nombre: "Santiago Quiñones", genero: "hombre", categoria: "mejor" },
+        { nombre: "Bolívar Velarde", genero: "hombre", categoria: "principiante" }, { nombre: "Efraín Astudillo", genero: "hombre", categoria: "principiante" },
+        { nombre: "Rosario Astudillo", genero: "mujer", categoria: "principiante" }, { nombre: "Cecilia Barbecho", genero: "mujer", categoria: "principiante" },
+        { nombre: "Roberto Carlos Calderón", genero: "hombre", categoria: "mejor" }, { nombre: "Juan Carlos Calderón", genero: "hombre", categoria: "intermedio" },
+        { nombre: "Teresa Navas", genero: "mujer", categoria: "principiante" }, { nombre: "Mónica de Padilla", genero: "mujer", categoria: "intermedio" },
+        { nombre: "Milton Padilla", genero: "hombre", categoria: "intermedio" }, { nombre: "Gissella de Parra", genero: "mujer", categoria: "principiante" },
+        { nombre: "Alexandra Renjifo", genero: "mujer", categoria: "mejor" }, { nombre: "Elian Renjifo", genero: "hombre", categoria: "mejor" },
+        { nombre: "Odila Riofrío", genero: "mujer", categoria: "principiante" }, { nombre: "Anita Zambrano", genero: "mujer", categoria: "principiante" },
+        { nombre: "Laura Bueno", genero: "mujer", categoria: "principiante" }, { nombre: "Luis Guanotasig", genero: "hombre", categoria: "intermedio" },
+        { nombre: "Rosa Andrade", genero: "mujer", categoria: "mejor" }, { nombre: "Gladys Guanotasig", genero: "mujer", categoria: "intermedio" },
+        { nombre: "Jenny Gutiérrez", genero: "mujer", categoria: "principiante" }, { nombre: "Aarón Lalvay", genero: "hombre", categoria: "mejor" },
+        { nombre: "Sharlott Lalvay", genero: "mujer", categoria: "mejor" }, { nombre: "Guicela de Lalvay", genero: "mujer", categoria: "mejor" },
+        { nombre: "Fabricio Mestanza", genero: "hombre", categoria: "mejor" }, { nombre: "Isabella Mestanza", genero: "mujer", categoria: "mejor" },
+        { nombre: "Teresa Miranda", genero: "mujer", categoria: "principiante" }, { nombre: "Guillermina de Mullo", genero: "mujer", categoria: "principiante" },
+        { nombre: "Emely Carreño", genero: "mujer", categoria: "mejor" }, { nombre: "Lucero de Carreño", genero: "mujer", categoria: "mejor" },
+        { nombre: "Génesis Duque", genero: "mujer", categoria: "intermedio" }, { nombre: "Deivin Navas", genero: "hombre", categoria: "mejor" },
+        { nombre: "Edgar Parra", genero: "hombre", categoria: "principiante" }, { nombre: "Rosario de Parra", genero: "mujer", categoria: "mejor" },
+        { nombre: "Derek Reyes", genero: "hombre", categoria: "mejor" }, { nombre: "Byron Vega", genero: "hombre", categoria: "intermedio" },
+        { nombre: "Lucrecia de Zambrano", genero: "mujer", categoria: "intermedio" }, { nombre: "Pablo Zambrano", genero: "hombre", categoria: "principiante" },
+        { nombre: "Fanny de Cordero", genero: "mujer", categoria: "principiante" }, { nombre: "Soraya de Collaguazo", genero: "mujer", categoria: "mejor" },
+        { nombre: "Ángel Garófolo", genero: "hombre", categoria: "intermedio" }, { nombre: "Luis Garófolo", genero: "hombre", categoria: "mejor" },
+        { nombre: "Norma Guajala", genero: "mujer", categoria: "intermedio" }, { nombre: "Justin Intriago", genero: "mujer", categoria: "intermedio" },
+        { nombre: "Mónica Intriago", genero: "mujer", categoria: "intermedio" }, { nombre: "Fanny Moreira", genero: "mujer", categoria: "intermedio" },
+        { nombre: "Alfredo Parra", genero: "hombre", categoria: "principiante" }, { nombre: "Jonathan Parra", genero: "hombre", categoria: "principiante" },
+        { nombre: "Andrea Peña", genero: "mujer", categoria: "intermedio" }, { nombre: "Luzdary de Pérez", genero: "mujer", categoria: "intermedio" },
+        { nombre: "Iván Punguil", genero: "hombre", categoria: "principiante" }, { nombre: "Jennifer Quezada", genero: "mujer", categoria: "intermedio" },
+        { nombre: "Paulina Quichimbo", genero: "mujer", categoria: "intermedio" }, { nombre: "Carmen Rodríguez", genero: "mujer", categoria: "principiante" }
+    ];
+
+    const parejasCasadas = [
+        ["Adriana de Loor", "Nestor Loor"], ["Jairo Mendoza", "Estelita de Mendoza"],
+        ["Clelio Quiñones", "Flor de Quiñones"], ["Efraín Astudillo", "Rosario Astudillo"],
+        ["Lucrecia de Zambrano", "Pablo Zambrano"], ["Gladys Guanotasig", "Luis Guanotasig"]
+    ];
+
+    function sortear(act) {
+        let r = document.getElementById('res');
+        if (act === 'lectura' || act === 'discurso') {
+            let h = pub.filter(p => p.genero === 'hombre');
+            let s = h[Math.floor(Math.random()*h.length)];
+            r.innerHTML = `<strong>${act.charAt(0).toUpperCase() + act.slice(1)}:</strong> ${s.nombre}`;
+        } else {
+            let p1, p2, valido = false, intentos = 0;
+            while (!valido && intentos < 1000) {
+                p1 = pub[Math.floor(Math.random()*pub.length)];
+                p2 = pub[Math.floor(Math.random()*pub.length)];
+                let esPareja = parejasCasadas.some(par => par.includes(p1.nombre) && par.includes(p2.nombre));
+                let mismoGenero = (p1.genero === p2.genero);
+                let ambosPrincipiantes = (p1.categoria === 'principiante' && p2.categoria === 'principiante');
+                if (p1 !== p2 && !ambosPrincipiantes && (esPareja || mismoGenero)) valido = true;
+                intentos++;
+            }
+            r.innerHTML = valido ? `<strong>Pareja:</strong> ${p1.nombre} y ${p2.nombre}` : "Presiona de nuevo.";
+        }
+    }
+</script>
+</body>
+</html>
